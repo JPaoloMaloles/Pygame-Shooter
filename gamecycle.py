@@ -29,9 +29,20 @@ def out_of_bounds(player_position, player_surface):
         player_position.y = 0
         print('top boundary')
 
+def time_display(time_passed):
+    time_passed_text = pygame.font.SysFont(
+        'timesnewroman',  30).render(f'time: {time_passed}', True, "white", "black")
+
+    fps = round(clock.get_fps())
+    fps_text = pygame.font.SysFont(
+        'timesnewroman',  30).render(f'fps: {fps}', True, "white", "black")
+    display_surface.blit(time_passed_text, (0, 0))
+    display_surface.blit(
+        fps_text, (display_surface.get_width()-fps_text.get_width(), 0))
+
 # ------------------------------------------------------ game cycle
 while running:
-    dt = clock.tick(60) / 1000
+    time_passed = round(pygame.time.get_ticks() * 0.001, 1)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -47,6 +58,7 @@ while running:
                     game_running = True
     
     while game_running:
+        time_passed = round(pygame.time.get_ticks() * 0.001, 1)
         dt = clock.tick(60) / 1000
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -77,16 +89,17 @@ while running:
 
         print(f'@@@@@@@@@@@@@ {player_position.x}')
         print(f'~~~~~~~~~~~~~ {player_position.y}')
-        # out_of_bounds(player_position)
-        
 
         # ------------------------------------------------------ rendering graphics
         display_surface.fill('Purple')
+        time_display(time_passed)
         for player in player_objects:
             out_of_bounds(player_position, player.player_surface)
             player.render(display_surface, player_position)
             # display_surface.blit(player.player_surface, player_rect)
         pygame.display.flip()
+    time_display(time_passed)
+    pygame.display.flip()
         
 
 
