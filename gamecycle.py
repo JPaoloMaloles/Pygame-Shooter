@@ -3,6 +3,8 @@ from sys import exit
 import random
 import time
 from Player import PlayerClass
+import Projectiles
+
 
 pygame.init()
 display_surface = pygame.display.set_mode((800,400))
@@ -11,6 +13,21 @@ game_running = False
 player_objects = [] #Make sure when ending games to set this to 0
 clock = pygame.time.Clock()
 dt = 0
+
+def out_of_bounds(player_position, player_surface):
+    # stops player from leaving the screen
+    if player_position.x > display_surface.get_width() - player_surface.get_width():
+        player_position.x = display_surface.get_width() - player_surface.get_width()
+        print('right boundary')
+    if player_position.x < 0:
+        player_position.x = 0
+        print('left boundary')
+    if player_position.y > display_surface.get_height() - player_surface.get_height():
+        player_position.y = display_surface.get_height() - player_surface.get_height()
+        print('bottom boundary')
+    if player_position.y < 0:
+        player_position.y = 0
+        print('top boundary')
 
 # ------------------------------------------------------ game cycle
 while running:
@@ -58,11 +75,15 @@ while running:
         if keys[pygame.K_d]:
             player_position.x += 300 * dt
 
-    # ------------------------------------------------------ rendering graphics
+        print(f'@@@@@@@@@@@@@ {player_position.x}')
+        print(f'~~~~~~~~~~~~~ {player_position.y}')
+        # out_of_bounds(player_position)
+        
+
+        # ------------------------------------------------------ rendering graphics
         display_surface.fill('Purple')
         for player in player_objects:
-            print(len(player_objects))
-            print(player)
+            out_of_bounds(player_position, player.player_surface)
             player.render(display_surface, player_position)
             # display_surface.blit(player.player_surface, player_rect)
         pygame.display.flip()
