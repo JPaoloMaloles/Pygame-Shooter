@@ -3,7 +3,7 @@ from sys import exit
 import random
 import time
 from Player import PlayerClass
-from Projectiles import ProjectileClass
+from Projectiles import EnemyClass
 
 
 pygame.init()
@@ -51,14 +51,23 @@ def create_enemy():
             enemy_objects.append(time_passed)
             enemy_creation_timestamp.append(time_passed)
             print(f'pastprojectiles 0: {enemy_creation_timestamp[0]}')
-            enemy_objects[len(enemy_objects) - 1] = ProjectileClass(
-                {'projectile_color': 'red', 'x_position': player_position.x, 'y_position': random.randint(0, display_surface.get_height()), 'display_surface':display_surface})
+            enemy_objects[len(enemy_objects) - 1] = EnemyClass(
+                {'enemy_color': 'red', 'x_position': player_position.x, 'y_position': random.randint(0, display_surface.get_height()), 'display_surface':display_surface})
             print(
                 f'pastprojectiles AFTER: {enemy_objects[len(enemy_objects) - 1]}')
             enemy_objects[0].fill(display_surface)
 
         if len(enemy_creation_timestamp) > 1:
             enemy_creation_timestamp.pop(0)
+
+def player_enemy_collision(player_rect):
+    continue_game = True
+    print(f'number of enemies: {len(enemy_objects)}')
+    for enemy in enemy_objects:
+        if pygame.Rect.colliderect(player.player_rect, enemy.rectangle):
+            continue_game = False
+    return continue_game
+    
 
 # ------------------------------------------------------ game cycle
 while running:
@@ -78,6 +87,11 @@ while running:
                     game_running = True
 
     while game_running:
+        floor_surface = pygame.Surface((display_surface.get_width(), 100))
+        floor_surface.fill('Blue')
+        floor_rect = floor_surface.get_rect(
+            topleft=(0, display_surface.get_height() - floor_surface.get_height()))
+
         time_passed = round(pygame.time.get_ticks() * 0.001, 1)
         dt = clock.tick(60) / 1000
         for event in pygame.event.get():
@@ -87,6 +101,7 @@ while running:
             if event.type ==  pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     player_objects = []
+                    enemy_objects = []
                     enemy_creation_timestamp = []
                     game_running = False
     # keys = pygame.key.get_pressed()
@@ -108,21 +123,35 @@ while running:
         if keys[pygame.K_d]:
             player_position.x += 300 * dt
 
-        print(f'@@@@@@@@@@@@@ {player_position.x}')
-        print(f'~~~~~~~~~~~~~ {player_position.y}')
+        # print(f'@@@@@@@@@@@@@ {player_position.x}')
+        # print(f'~~~~~~~~~~~~~ {player_position.y}')
         create_enemy()
         # ------------------------------------------------------ rendering graphics
         display_surface.fill('Purple')
+        display_surface.blit(
+                floor_surface, (0, display_surface.get_height() - floor_surface.get_height()))
+
         time_display(time_passed)
-        for player in player_objects:
-            out_of_bounds(player_position, player.player_surface)
-            player.render(display_surface, player_position)
-            # display_surface.blit(player.player_surface, player_rect)
         for enemy in enemy_objects:
             enemy.chase(player_position)
             enemy.fill(display_surface)
+            #put missile collision here
+        
+        for player in player_objects:
+            out_of_bounds(player_position, player.player_surface)
+            player.render(display_surface, player_position)
+            game_running = player_enemy_collision(player.player_rect)
+
+        if not game_running:
+            player_objects = []
+            enemy_objects = []
+            enemy_creation_timestamp = []
+        
+        
         pygame.display.flip()
+        print(f'gamerunning is : {game_running}')
     time_display(time_passed)
+    display_surface.fill('Blue')
     pygame.display.flip()
         
 
