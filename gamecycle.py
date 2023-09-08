@@ -81,6 +81,24 @@ def player_movement(player_position):
         player_position.x -= 300 * dt
     if keys[pygame.K_d]:
         player_position.x += 300 * dt
+
+def player_click(time_since_last_projectile_created):
+    mouse_click = pygame.mouse.get_pressed()
+    if time_passed - time_since_last_projectile_created >= 1:
+        if mouse_click[0]:
+            time_since_last_projectile_created = time_passed
+            existing_projectiles.append("f")
+            existing_projectiles[len(existing_projectiles)-1] = BlastProjectile(
+                {'color': 'green', 'x_position': player_position.x, 'y_position': player_position.y, 'mouse_position': pygame.Vector2(
+                    pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])})
+        if mouse_click[2]:
+            time_since_last_projectile_created = time_passed
+            existing_projectiles.append("f")
+            existing_projectiles[len(existing_projectiles)-1] = FollowProjectile(
+                {'color': 'Pink', 'x_position': player_position.x, 'y_position': player_position.y, 'mouse_position': pygame.Vector2(
+                    pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])})
+    return time_since_last_projectile_created
+    
     
 
 # ------------------------------------------------------ game cycle
@@ -128,7 +146,7 @@ while running:
     #         print(player)
     #     print('=====')
         player_movement(player_position)
-        # player_click()
+        time_since_last_projectile_created = player_click(time_since_last_projectile_created)
         # keys = pygame.key.get_pressed()
         # if keys[pygame.K_w]:
         #     player_position.y -= 300 * dt
@@ -138,21 +156,6 @@ while running:
         #     player_position.x -= 300 * dt
         # if keys[pygame.K_d]:
         #     player_position.x += 300 * dt
-
-        mouse_click = pygame.mouse.get_pressed()
-        if time_passed - time_since_last_projectile_created >= 1:
-            if mouse_click[0]:
-                time_since_last_projectile_created = time_passed
-                existing_projectiles.append("f")
-                existing_projectiles[len(existing_projectiles)-1] = BlastProjectile(
-                    {'color': 'green', 'x_position': player_position.x, 'y_position': player_position.y, 'mouse_position': pygame.Vector2(
-                        pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])})
-            if mouse_click[2]:
-                time_since_last_projectile_created = time_passed
-                existing_projectiles.append("f")
-                existing_projectiles[len(existing_projectiles)-1] = FollowProjectile(
-                    {'color': 'Pink', 'x_position': player_position.x, 'y_position': player_position.y, 'mouse_position': pygame.Vector2(
-                        pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])})
 
         # print(f'@@@@@@@@@@@@@ {player_position.x}')
         # print(f'~~~~~~~~~~~~~ {player_position.y}')
