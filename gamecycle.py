@@ -3,7 +3,7 @@ from sys import exit
 import random
 import time
 from Player import PlayerClass
-from Projectiles import EnemyClass
+from Enemy import EnemyClass
 
 
 pygame.init()
@@ -12,7 +12,7 @@ running = True
 game_running = False
 player_objects = [] #Make sure when ending games to set this to 0
 enemy_objects = []
-enemy_creation_timestamp = []
+last_enemy_creation_timestamp = []
 clock = pygame.time.Clock()
 dt = 0
 
@@ -44,21 +44,21 @@ def time_display(time_passed):
     
 def create_enemy():
     if time_passed % 3 == 0:
-        if time_passed not in enemy_creation_timestamp:
+        if time_passed not in last_enemy_creation_timestamp:
             print(f'exact {pygame.time.get_ticks()}')
             print(f'create projectile-------------------------{time_passed}')
             print(len(enemy_objects))
             enemy_objects.append(time_passed)
-            enemy_creation_timestamp.append(time_passed)
-            print(f'pastprojectiles 0: {enemy_creation_timestamp[0]}')
+            last_enemy_creation_timestamp.append(time_passed)
+            print(f'pastprojectiles 0: {last_enemy_creation_timestamp[0]}')
             enemy_objects[len(enemy_objects) - 1] = EnemyClass(
-                {'enemy_color': 'red', 'x_position': player_position.x, 'y_position': random.randint(0, display_surface.get_height()), 'display_surface':display_surface})
+                {'color': 'red', 'x_position': player_position.x, 'y_position': random.randint(0, display_surface.get_height()), 'display_surface':display_surface})
             print(
                 f'pastprojectiles AFTER: {enemy_objects[len(enemy_objects) - 1]}')
             enemy_objects[0].fill(display_surface)
 
-        if len(enemy_creation_timestamp) > 1:
-            enemy_creation_timestamp.pop(0)
+        if len(last_enemy_creation_timestamp) > 1:
+            last_enemy_creation_timestamp.pop(0)
 
 def player_enemy_collision(player_rect):
     continue_game = True
@@ -102,7 +102,7 @@ while running:
                 if event.key == pygame.K_ESCAPE:
                     player_objects = []
                     enemy_objects = []
-                    enemy_creation_timestamp = []
+                    last_enemy_creation_timestamp = []
                     game_running = False
     # keys = pygame.key.get_pressed()
     # if keys[pygame.K_SPACE]:
@@ -145,7 +145,7 @@ while running:
         if not game_running:
             player_objects = []
             enemy_objects = []
-            enemy_creation_timestamp = []
+            last_enemy_creation_timestamp = []
         
         
         pygame.display.flip()
