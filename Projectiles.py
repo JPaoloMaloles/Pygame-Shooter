@@ -11,7 +11,7 @@ class ProjectileClass:
         self.rectangle = self.surface.get_rect(topleft=self.position)
         self.surface.fill(f'{self.color}')
         display_surface.blit(self.surface, self.position)
-        print(f"Projectile rendered at {self.position}")
+        # print(f"Projectile rendered at {self.position}")
         pygame.draw.rect(display_surface, 'Blue', self.rectangle, 1)
 
 class BlastProjectile(ProjectileClass):
@@ -20,7 +20,7 @@ class BlastProjectile(ProjectileClass):
         self.target_position = input["mouse_position"]
 
     def shoot(self, dt):
-        print(f'&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&: {self.target_position}')
+        # print(f'&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&: {self.target_position}')
         if abs((self.target_position.x - self.position.x)/0.5) >= 0.5:
             if self.target_position.x > self.position.x:
                 self.position.x = self.position.x + \
@@ -52,7 +52,7 @@ class FollowProjectile(ProjectileClass):
         dynamic_mouse_position = pygame.Vector2(
             pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
 
-        print(f'&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&: {dynamic_mouse_position}')
+        # print(f'&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&: {dynamic_mouse_position}')
         if abs((dynamic_mouse_position.x - self.position.x)/0.5) >= 0.5:
             if dynamic_mouse_position.x > self.position.x:
                 self.position.x = self.position.x + \

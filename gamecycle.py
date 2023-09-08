@@ -13,6 +13,8 @@ running = True
 game_running = False
 player_objects = [] #Make sure when ending games to set this to 0
 enemy_objects = []
+dying_enemy_ids = []
+dying_projectile_ids = []
 existing_projectiles = []
 last_enemy_creation_timestamp = []
 time_since_last_projectile_created = 0
@@ -65,19 +67,21 @@ def create_enemy():
 
 def player_enemy_collision(player_rect):
     continue_game = True
-    print(f'number of enemies: {len(enemy_objects)}')
-    for enemy in enemy_objects:
+    for index, enemy in enumerate(enemy_objects):
         if pygame.Rect.colliderect(player_rect, enemy.rectangle):
             continue_game = False
-        
     return continue_game
 
-def projectile_enemy_collision(projectile_rect):
-    continue_game = True
+def projectile_enemy_collision(projectile_rect, projectile_index):
+    print(f'number of enemies: {len(enemy_objects)}')
     for index, enemy in enumerate(enemy_objects):
         if pygame.Rect.colliderect(projectile_rect, enemy.rectangle):
-            continue_game = False
-    return continue_game
+            if index not in dying_enemy_ids:
+                print(f'projectile index is: {projectile_index}')
+                dying_projectile_ids.append(projectile_index)
+                dying_enemy_ids.append(index)
+        
+    return dying_enemy_ids, dying_projectile_ids
 
 def player_movement(player_position):
     keys = pygame.key.get_pressed()
@@ -191,7 +195,23 @@ while running:
             if getattr(projectile, 'tracking', False):
                 projectile.tracking(dt)
             projectile.fill(display_surface)
-            game_running = projectile_enemy_collision(projectile.rectangle)
+            dying_enemy_ids, dying_projectile_ids = projectile_enemy_collision(projectile.rectangle, index)
+            # print('======================================')
+            # print('======================================')
+            # print(f'length of enemy ids, length of projectile ids: {len(dying_enemy_ids)} and {len(dying_projectile_ids)}')
+            # print('======================================')
+            # print('======================================')
+        
+        for id in dying_enemy_ids:
+            print(f'length of enemy objects: {len(enemy_objects)}')
+            enemy_objects.pop(id)
+        for id in dying_projectile_ids:
+            print(f'THE PROJECTILE ID IS {id}')
+            print(f'length of existing_projectiles: {len(existing_projectiles)}')
+            existing_projectiles.pop(id)
+
+        dying_enemy_ids = []
+        dying_projectile_ids = []
 
         if not game_running:
             player_objects = []

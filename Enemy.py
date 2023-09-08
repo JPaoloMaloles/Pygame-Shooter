@@ -11,13 +11,13 @@ class EnemyClass():
         self.rectangle = self.surface.get_rect(topleft=self.position)
         self.surface.fill(f'{self.color}')
         display_surface.blit(self.surface, self.position)
-        print(f"surface rendered at {self.position}")
+        # print(f"surface rendered at {self.position}")
         pygame.draw.rect(display_surface, 'Green', self.rectangle, 1)
 
     def chase(self, player_position):
         a = self.position.x
         b = self.position.y
-        print(f'&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&: {player_position}')
+        # print(f'&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&: {player_position}')
         # print(f'&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&: {self.position.x}')
         # print(
         #     f'&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&: {(player_position.x - self.position.x)/0.5}')
