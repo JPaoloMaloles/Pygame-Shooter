@@ -73,9 +73,11 @@ def player_enemy_collision(player_rect):
     return continue_game
 
 def projectile_enemy_collision(projectile_rect):
+    continue_game = True
     for index, enemy in enumerate(enemy_objects):
         if pygame.Rect.colliderect(projectile_rect, enemy.rectangle):
             continue_game = False
+    return continue_game
 
 def player_movement(player_position):
     keys = pygame.key.get_pressed()
@@ -189,7 +191,7 @@ while running:
             if getattr(projectile, 'tracking', False):
                 projectile.tracking(dt)
             projectile.fill(display_surface)
-            projectile_enemy_collision(projectile.rect)
+            game_running = projectile_enemy_collision(projectile.rectangle)
 
         if not game_running:
             player_objects = []
