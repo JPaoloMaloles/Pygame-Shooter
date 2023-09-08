@@ -4,6 +4,7 @@ import random
 import time
 from Player import PlayerClass
 from Enemy import EnemyClass
+from Projectiles import ProjectileClass, BlastProjectile
 
 
 pygame.init()
@@ -12,7 +13,9 @@ running = True
 game_running = False
 player_objects = [] #Make sure when ending games to set this to 0
 enemy_objects = []
+existing_projectiles = []
 last_enemy_creation_timestamp = []
+time_since_last_projectile_created = 0
 clock = pygame.time.Clock()
 dt = 0
 
@@ -123,6 +126,21 @@ while running:
         if keys[pygame.K_d]:
             player_position.x += 300 * dt
 
+        mouse_click = pygame.mouse.get_pressed()
+        if time_passed - time_since_last_projectile_created >= 1:
+            if mouse_click[0]:
+                time_since_last_projectile_created = time_passed
+                existing_projectiles.append("f")
+                existing_projectiles[len(existing_projectiles)-1] = BlastProjectile(
+                    {'color': 'green', 'x_position': player_position.x, 'y_position': player_position.y, 'mouse_position': pygame.Vector2(
+                        pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])})
+            if mouse_click[2]:
+                time_since_last_projectile_created = time_passed
+                existing_projectiles.append("f")
+                existing_projectiles[len(existing_projectiles)-1] = FollowProjectile(
+                    {'color': 'Pink', 'x_position': player_position.x, 'y_position': player_position.y, 'mouse_position': pygame.Vector2(
+                        pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])})
+
         # print(f'@@@@@@@@@@@@@ {player_position.x}')
         # print(f'~~~~~~~~~~~~~ {player_position.y}')
         create_enemy()
@@ -141,6 +159,13 @@ while running:
             out_of_bounds(player_position, player.player_surface)
             player.render(display_surface, player_position)
             game_running = player_enemy_collision(player.player_rect)
+
+        for index, projectile in enumerate(existing_projectiles):
+            if getattr(projectile, 'shoot', False):
+                projectile.shoot()
+            if getattr(projectile, 'tracking', False):
+                projectile.tracking()
+            projectile.fill(display_surface)
 
         if not game_running:
             player_objects = []
