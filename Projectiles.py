@@ -8,9 +8,11 @@ class ProjectileClass:
         self.rectangle = self.surface.get_rect(topleft=(self.position))
 
     def fill(self, display_surface):
+        self.rectangle = self.surface.get_rect(topleft=self.position)
         self.surface.fill(f'{self.color}')
         display_surface.blit(self.surface, self.position)
-        print(f"blast_projectile rendered at {self.position}")
+        print(f"Projectile rendered at {self.position}")
+        pygame.draw.rect(display_surface, 'Blue', self.rectangle, 1)
 
 class BlastProjectile(ProjectileClass):
     def __init__(self, input):
@@ -18,9 +20,6 @@ class BlastProjectile(ProjectileClass):
         self.target_position = input["mouse_position"]
 
     def shoot(self):
-        # mouse_position = pygame.Vector2(
-        #     pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
-
         print(f' mouse x position is {self.target_position.x}')
         if abs((self.target_position.x - self.position.x)/0.5) >= 0.5:
             if self.target_position.x > self.position.x:
@@ -43,42 +42,34 @@ class BlastProjectile(ProjectileClass):
                      
 
 
-# class FollowProjectile:
-#     def __init__(self, input):
-#         self.projectile_color = input["projectile_color"]
-#         self.position = pygame.Vector2(
-#             input['x_position'], input['y_position'])
-#         self.projectile = pygame.Surface((10, 10))
-#         self.target_position = input["mouse_position"]
+class FollowProjectile(ProjectileClass):
+    def __init__(self, input):
+        super().__init__(input)
+        self.target_position = input["mouse_position"]
 
-#     def fill(self):
-#         self.projectile.fill(f'{self.projectile_color}')
-#         display_surface.blit(self.projectile, self.position)
-#         print(f"projectile created at {self.position}")
+    def tracking(self):
+        dynamic_mouse_position = pygame.Vector2(
+            pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
 
-#     def tracking(self):
-#         dynamic_mouse_position = pygame.Vector2(
-#             pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
-
-#         print(f' mouse x position is {dynamic_mouse_position.x}')
-#         if abs((dynamic_mouse_position.x - self.position.x)/0.5) >= 0.5:
-#             if dynamic_mouse_position.x > self.position.x:
-#                 self.position.x = self.position.x + \
-#                     ((dynamic_mouse_position.x - self.position.x) /
-#                      ((dynamic_mouse_position.x - self.position.x)/2))
-#             else:
-#                 self.position.x = self.position.x - \
-#                     ((dynamic_mouse_position.x - self.position.x) /
-#                      ((dynamic_mouse_position.x - self.position.x)/2))
-#         if abs((dynamic_mouse_position.y - self.position.y)/0.5) >= 0.5:
-#             if dynamic_mouse_position.y > self.position.y:
-#                 self.position.y = self.position.y + \
-#                     ((dynamic_mouse_position.y - self.position.y) /
-#                      ((dynamic_mouse_position.y - self.position.y)/2))
-#             else:
-#                 self.position.y = self.position.y - \
-#                     ((dynamic_mouse_position.y - self.position.y) /
-#                      ((dynamic_mouse_position.y - self.position.y)/2))
+        print(f' mouse x position is {dynamic_mouse_position.x}')
+        if abs((dynamic_mouse_position.x - self.position.x)/0.5) >= 0.5:
+            if dynamic_mouse_position.x > self.position.x:
+                self.position.x = self.position.x + \
+                    ((dynamic_mouse_position.x - self.position.x) /
+                     ((dynamic_mouse_position.x - self.position.x)/2))
+            else:
+                self.position.x = self.position.x - \
+                    ((dynamic_mouse_position.x - self.position.x) /
+                     ((dynamic_mouse_position.x - self.position.x)/2))
+        if abs((dynamic_mouse_position.y - self.position.y)/0.5) >= 0.5:
+            if dynamic_mouse_position.y > self.position.y:
+                self.position.y = self.position.y + \
+                    ((dynamic_mouse_position.y - self.position.y) /
+                     ((dynamic_mouse_position.y - self.position.y)/2))
+            else:
+                self.position.y = self.position.y - \
+                    ((dynamic_mouse_position.y - self.position.y) /
+                     ((dynamic_mouse_position.y - self.position.y)/2))
 
 
 # class CreateProjectile:

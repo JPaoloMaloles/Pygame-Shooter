@@ -4,7 +4,7 @@ import random
 import time
 from Player import PlayerClass
 from Enemy import EnemyClass
-from Projectiles import ProjectileClass, BlastProjectile
+from Projectiles import ProjectileClass, BlastProjectile, FollowProjectile
 
 
 pygame.init()
@@ -70,6 +70,17 @@ def player_enemy_collision(player_rect):
         if pygame.Rect.colliderect(player.player_rect, enemy.rectangle):
             continue_game = False
     return continue_game
+
+def player_movement(player_position):
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w]:
+        player_position.y -= 300 * dt
+    if keys[pygame.K_s]:
+        player_position.y += 300 * dt
+    if keys[pygame.K_a]:
+        player_position.x -= 300 * dt
+    if keys[pygame.K_d]:
+        player_position.x += 300 * dt
     
 
 # ------------------------------------------------------ game cycle
@@ -116,15 +127,17 @@ while running:
     #     for player in players:
     #         print(player)
     #     print('=====')
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_w]:
-            player_position.y -= 300 * dt
-        if keys[pygame.K_s]:
-            player_position.y += 300 * dt
-        if keys[pygame.K_a]:
-            player_position.x -= 300 * dt
-        if keys[pygame.K_d]:
-            player_position.x += 300 * dt
+        player_movement(player_position)
+        # player_click()
+        # keys = pygame.key.get_pressed()
+        # if keys[pygame.K_w]:
+        #     player_position.y -= 300 * dt
+        # if keys[pygame.K_s]:
+        #     player_position.y += 300 * dt
+        # if keys[pygame.K_a]:
+        #     player_position.x -= 300 * dt
+        # if keys[pygame.K_d]:
+        #     player_position.x += 300 * dt
 
         mouse_click = pygame.mouse.get_pressed()
         if time_passed - time_since_last_projectile_created >= 1:
