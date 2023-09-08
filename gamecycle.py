@@ -134,6 +134,7 @@ while running:
                 if event.key == pygame.K_ESCAPE:
                     player_objects = []
                     enemy_objects = []
+                    existing_projectiles = []
                     last_enemy_creation_timestamp = []
                     game_running = False
     # keys = pygame.key.get_pressed()
@@ -178,14 +179,15 @@ while running:
 
         for index, projectile in enumerate(existing_projectiles):
             if getattr(projectile, 'shoot', False):
-                projectile.shoot()
+                projectile.shoot(dt)
             if getattr(projectile, 'tracking', False):
-                projectile.tracking()
+                projectile.tracking(dt)
             projectile.fill(display_surface)
 
         if not game_running:
             player_objects = []
             enemy_objects = []
+            existing_projectiles = []
             last_enemy_creation_timestamp = []
         
         

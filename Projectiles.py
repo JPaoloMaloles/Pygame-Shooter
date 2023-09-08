@@ -19,26 +19,26 @@ class BlastProjectile(ProjectileClass):
         super().__init__(input)
         self.target_position = input["mouse_position"]
 
-    def shoot(self):
+    def shoot(self, dt):
         print(f'&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&: {self.target_position}')
         if abs((self.target_position.x - self.position.x)/0.5) >= 0.5:
             if self.target_position.x > self.position.x:
                 self.position.x = self.position.x + \
                     ((self.target_position.x - self.position.x) /
-                     ((self.target_position.x - self.position.x)/0.5))
+                     ((self.target_position.x - self.position.x)/60)) * dt
             else:
                 self.position.x = self.position.x - \
                     ((self.target_position.x - self.position.x) /
-                     ((self.target_position.x - self.position.x)/0.5))
+                     ((self.target_position.x - self.position.x)/60)) * dt
         if abs((self.target_position.y - self.position.y)/0.5) >= 0.5:
             if self.target_position.y > self.position.y:
                 self.position.y = self.position.y + \
                     ((self.target_position.y - self.position.y) /
-                     ((self.target_position.y - self.position.y)/0.5))
+                     ((self.target_position.y - self.position.y)/60)) * dt
             else:
                 self.position.y = self.position.y - \
                     ((self.target_position.y - self.position.y) /
-                     ((self.target_position.y - self.position.y)/0.5))
+                     ((self.target_position.y - self.position.y)/60)) * dt
 
                      
 
@@ -48,7 +48,7 @@ class FollowProjectile(ProjectileClass):
         super().__init__(input)
         self.target_position = input["mouse_position"]
 
-    def tracking(self):
+    def tracking(self, dt):
         dynamic_mouse_position = pygame.Vector2(
             pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
 
@@ -57,17 +57,17 @@ class FollowProjectile(ProjectileClass):
             if dynamic_mouse_position.x > self.position.x:
                 self.position.x = self.position.x + \
                     ((dynamic_mouse_position.x - self.position.x) /
-                     ((dynamic_mouse_position.x - self.position.x)/0.5))
+                     ((dynamic_mouse_position.x - self.position.x)/60)) * dt
             else:
                 self.position.x = self.position.x - \
                     ((dynamic_mouse_position.x - self.position.x) /
-                     ((dynamic_mouse_position.x - self.position.x)/0.5))
+                     ((dynamic_mouse_position.x - self.position.x)/60)) * dt
         if abs((dynamic_mouse_position.y - self.position.y)/0.5) >= 0.5:
             if dynamic_mouse_position.y > self.position.y:
                 self.position.y = self.position.y + \
                     ((dynamic_mouse_position.y - self.position.y) /
-                     ((dynamic_mouse_position.y - self.position.y)/0.5))
+                     ((dynamic_mouse_position.y - self.position.y)/60)) * dt
             else:
                 self.position.y = self.position.y - \
                     ((dynamic_mouse_position.y - self.position.y) /
-                     ((dynamic_mouse_position.y - self.position.y)/0.5))
+                     ((dynamic_mouse_position.y - self.position.y)/60)) * dt
