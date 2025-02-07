@@ -1,4 +1,7 @@
 import pygame
+import math
+
+
 class ProjectileClass:
     def __init__(self, input):
         self.color = input["color"]
@@ -13,6 +16,50 @@ class ProjectileClass:
         display_surface.blit(self.surface, self.position)
         # print(f"Projectile rendered at {self.position}")
         pygame.draw.rect(display_surface, 'Blue', self.rectangle, 1)
+
+
+class ClassicProjectile(ProjectileClass):
+    def __init__(self, input):
+        super().__init__(input)
+        self.target_position = input['mouse_position']
+        self.initial_x_position = input['x_position']
+        self.initial_y_position = input['y_position']
+        self.go_right = input['go_right']
+        self.go_down = input['go_down']
+        self.angle = input['angle']
+
+    def shoot(self, dt):
+        match self.go_right:
+            case True:
+                self.position.x = self.position.x + \
+                    (math.cos(self.angle)*100) * dt
+            case False:
+                self.position.x = self.position.x - \
+                    (math.cos(self.angle)*100) * dt
+        match self.go_down:
+            case True:
+                self.position.y = self.position.y + \
+                    (math.sin(self.angle)*100) * dt
+            case False:
+                self.position.y = self.position.y - \
+                    (math.sin(self.angle)*100) * dt
+
+        # This one speeds up and down based on distance from self on click
+        # match self.go_right:
+        #     case True:
+        #         self.position.x = self.position.x + \
+        #             ((self.target_position.x - self.initial_x_position) * dt)
+        #     case False:
+        #         self.position.x = self.position.x - \
+        #             ((self.initial_x_position - self.target_position.x) * dt)
+        # match self.go_down:
+        #     case True:
+        #         self.position.y = self.position.y + \
+        #             ((self.target_position.y - self.initial_y_position) * dt)
+        #     case False:
+        #         self.position.y = self.position.y - \
+        #             ((self.initial_y_position - self.target_position.y) * dt)
+
 
 class BlastProjectile(ProjectileClass):
     def __init__(self, input):
@@ -39,8 +86,6 @@ class BlastProjectile(ProjectileClass):
                 self.position.y = self.position.y - \
                     ((self.target_position.y - self.position.y) /
                      ((self.target_position.y - self.position.y)/60)) * dt
-
-                     
 
 
 class FollowProjectile(ProjectileClass):
